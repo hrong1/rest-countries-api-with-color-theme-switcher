@@ -6,11 +6,12 @@ export async function getCountriesData() {
 
   try {
     const result = await fetch(
-        'https://restcountries.com/v3.1/all', {
+        'https://restcountries.com/v5/all', {
         next: { revalidate: 86400 }
     });
-    if (!result.ok) throw new Error('API Fail');
-    return await result.json();
+    const data = await result.json();
+    if (!result.ok || data.success === false) throw new Error('API Deprecated or Failed');
+    return data;
   } catch (error) {
     console.warn('The API request failed, and the system fell back to local JSON data.', error);
     return localData; 
